@@ -1,0 +1,8 @@
+<li class="list-group-item media">
+    <img src="{{ post.author.avatar(40) }}" alt="user's avatar" class="media-object pull-left"/>
+    <div class="media-body">
+        <h4 class="media-heading">{{ post.body }}</h4>
+        {{ post.author.nickname }} 发布于 {{ post.timestamp }}
+    </div>
+</li>
+
