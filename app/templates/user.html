@@ -1,73 +1,74 @@
 {% extends 'layout.html' %}
 {% block body %}
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h4>个人档案</h4>
-        </div>
-        <div class="panel-body">
-            <div class="media">
-                <img src="{{ user.avatar(128) }}" alt="user's avatar" class="media-object pull-left">
-                <div class="media-body">
-                    <h2 class="media-heading">{{ user.nickname }}</h2>
-                    {% if user.about_me %}
-                        <p>{{ user.about_me }}</p>
-                    {% endif %}
-                    {% if user.last_seen %}
-                        <p><i>上次访问时间: {{ user.last_seen }}</i></p>
-                    {% endif %}
-                    <div class="media-bottom">
-                        {% if user.id == g.user.id %}
-                            <a href="{{ url_for('edit') }}" class="btn btn-info">编辑</a>
-                        {% elif not g.user.is_following(user) %}
-                            <a href="{{ url_for('follow', nickname=user.nickname) }}" class="btn btn-success">Follow</a>
-                        {% else %}
-                            <a href="{{ url_for('unfollow', nickname=user.nickname) }}"
-                               class="btn btn-danger">Unfollow</a>
-                        {% endif %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 col-sm-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>个人档案</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="media">
+                        <a href="#" class="pull-left">
+                            <img src="{{ user.avatar(128) }}" alt="Avatar" class="media-object img-thumbnail" />
+                        </a>
+                        <div class="media-body">
+                            <h2 class="media-heading">{{ user.nickname }}</h2>
+                            {% if user.about_me %}
+                                <p>{{ user.about_me }}</p>
+                            {% endif %}
+                            {% if user.last_seen %}
+                                <p><em>上次访问时间: {{ momentjs(user.last_seen).calendar() }}</em></p>
+                            {% endif %}
+                            <div class="media-bottom">
+                                {% if user.id == g.user.id %}
+                                    <a href="{{ url_for('edit') }}" class="btn btn-info">编辑</a>
+                                {% elif not g.user.is_following(user) %}
+                                    <a href="{{ url_for('follow', nickname=user.nickname) }}" class="btn btn-success">Follow</a>
+                                {% else %}
+                                    <a href="{{ url_for('unfollow', nickname=user.nickname) }}"
+                                       class="btn btn-danger">Unfollow</a>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
+                    <hr>
+                    <ul class="media-list">
+                        {% for post in posts.items %}
+                            {% include 'post.html' %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="panel-footer">
+                    <nav>
+                        <ul class="pagination">
+                            <li{% if not posts.has_prev %} class="disabled"{% endif %}>
+                                <a href="{{ url_for('index', page=posts.prev_num) if posts.has_prev else '#' }}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {%- for page in posts.iter_pages() %}
+                                {% if page %}
+                                    {% if page != posts.page %}
+                                        <li><a href="{{ url_for('index', page=page) }}">{{ page }}</a></li>
+                                    {% else %}
+                                        <li class="active"><a href="#">{{ page }} <span class="sr-only">(current)</span></a>
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    <li class="disabled"><a href="#">...</a></li>
+                                {% endif %}
+                            {%- endfor %}
+                            <li{% if not posts.has_next %} class="disabled"{% endif %}>
+                                <a href="{{ url_for('index', page=posts.next_num) if posts.has_next else '#' }}"
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">TA发布的所有博客</div>
-        <div class="panel-body">
-            <ul class="list-group">
-                {% for post in posts.items %}
-                    {% include 'post.html' %}
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="panel-footer">
-            <nav>
-                <ul class="pagination">
-                    <li{% if not posts.has_prev %} class="disabled"{% endif %}>
-                        <a href="{{ url_for('index', page=posts.prev_num) if posts.has_prev else '#' }}"
-                           aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    {%- for page in posts.iter_pages() %}
-                        {% if page %}
-                            {% if page != posts.page %}
-                                <li><a href="{{ url_for('index', page=page) }}">{{ page }}</a></li>
-                            {% else %}
-                                <li class="active"><a href="#">{{ page }} <span class="sr-only">(current)</span></a>
-                                </li>
-                            {% endif %}
-                        {% else %}
-                            <li class="disabled"><a href="#">...</a></li>
-                        {% endif %}
-                    {%- endfor %}
-                    <li{% if not posts.has_next %} class="disabled"{% endif %}>
-                        <a href="{{ url_for('index', page=posts.next_num) if posts.has_next else '#' }}"
-                           aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
         </div>
     </div>
 {% endblock %}

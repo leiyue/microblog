@@ -1,8 +1,13 @@
-<li class="list-group-item media">
-    <img src="{{ post.author.avatar(40) }}" alt="user's avatar" class="media-object pull-left"/>
+<li class="media">
+    <a href="#" class="pull-left">
+        <img src="{{ post.author.avatar(40) }}" alt="Avatar" class="media-object img-circle"/>
+    </a>
     <div class="media-body">
-        <h4 class="media-heading">{{ post.body }}</h4>
-        {{ post.author.nickname }} 发布于 {{ post.timestamp }}
+        <span class="text-muted pull-right">
+            <small class="text-muted">{{ momentjs(post.timestamp).fromNow() }}</small>
+        </span>
+        <strong class="text-success">{{ post.author.nickname }}</strong>
+        <p>{{ post.body }}</p>
     </div>
 </li>
 

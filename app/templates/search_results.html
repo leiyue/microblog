@@ -1,7 +1,23 @@
 {% extends 'layout.html' %}
 {% block body %}
-    <h1>搜索结果: {{ query }}</h1>
-    {% for post in results %}
-        {% include 'post.html' %}
-    {% endfor %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 col-sm-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>搜索结果: {{ query }}</h4>
+                </div>
+                <div class="panel-body">
+                    {% if results %}
+                        <ul class="media-list">
+                            {% for post in results %}
+                                {% include 'post.html' %}
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>没有搜索到关于 {{ query }} 的任何信息</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
